@@ -7,16 +7,26 @@ Practice accessing data by console.log-ing the following pieces of data note.
 
 💡 HINT: You may want to filter the data first 😉*/
 
+//finals2014 is a new array, with only one object {}, which means this Object
+//is located at index 0, then to access it every key should be call.
+const finals2014 = fifaData.filter((element)=>{
+	return element.Year === 2014 && element.Stage === 'Final';	
+}); console.log(finals2014);
+
 //(a) Home Team name for 2014 world cup final
+console.log(finals2014[0]['Home Team Name']);
 
 //(b) Away Team name for 2014 world cup final
+console.log(finals2014[0]['Away Team Name']);
 
 //(c) Home Team goals for 2014 world cup final
+console.log("Home Team Goals:", finals2014[0]['Home Team Goals']);
 
 //(d) Away Team goals for 2014 world cup final
+console.log("Away Team Goals:", finals2014[0]['Away Team Goals']);
 
 //(e) Winner of 2014 world cup final */
-
+console.log(finals2014[0]['Win conditions']);
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 2: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use getFinals to do the following:
@@ -26,11 +36,14 @@ Use getFinals to do the following:
 💡 HINT - you should be looking at the stage key inside of the objects
 */
 
-function getFinals(/* code here */) {
-    /* code here */
+function getFinals(array) {
+    const allFinals = array.filter((element)=>{
+		return element.Stage === 'Final';
+	});
+	return allFinals;
  }
 
-
+getFinals(fifaData);
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 3: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher-order function called getYears to do the following: 
@@ -38,11 +51,11 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function as the second parameter that will take getFinals from task 2 as an argument
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears(/* code here */) {
-    /* code here */
+function getYears(arr, getFinalsCB) {
+	return getFinalsCB(arr).map(element => element.Year);
 }
 
-
+console.log(getYears(fifaData,  getFinals));
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 4: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher-order function getWinners to do the following:  
@@ -52,11 +65,12 @@ Use the higher-order function getWinners to do the following:
 💡 HINT: Don't worry about ties for now (Please see the README file for info on ties for a stretch goal.)
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
+function getWinners(array, finalsCB) {
+	const allFinals = finalsCB(array);
+	return allFinals.map((x) => x["Home Team Goals"] > x["Away Team Goals"] ? x["Home Team Name"] : x["Away Team Name"]);
 }
 
-
+console.log(getWinners(fifaData, getFinals));
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 5: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use the higher-order function getWinnersByYear to do the following:
@@ -69,11 +83,19 @@ Use the higher-order function getWinnersByYear to do the following:
 💡 HINT: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+//data is the main array of all the data from all world cups 
+//finalsCB is an array with all the finals of every year
+//yearsCB is all the years of the finals
+//winnersCB is all the winners during all the years;
+
+function getWinnersByYear(data, finalsCB, yearsCB, winnersCB) {
+    const winners = winnersCB(data, finalsCB);
+	const years = yearsCB(data, finalsCB);
+	
+	return winners.map((item, index) => `In ${years[index]}, ${item} won the world cup!`);
 }
 
-
+console.log(getWinnersByYear(fifaData, getFinals, getYears, getWinners));
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 6: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher order function `getAverageGoals` to do the following: 
@@ -89,11 +111,14 @@ Use the higher order function `getAverageGoals` to do the following:
  
 */
 
-function getAverageGoals(/* code here */) {
-    /* code here */
+function getAverageGoals(data) {
+    const averageHomeGoals = data.reduce((acc, item) => {
+		return acc + item["Home Team Goals"] + item["Away Team Goals"];
+	}, 0);
+	return (averageHomeGoals / data.length).toFixed(2);
  }
 
-
+console.log(getAverageGoals(fifaData));
 
 
 /// 🥅 STRETCH 🥅 ///
